@@ -33,12 +33,13 @@ Route::middleware(['web', 'TrackVisitor'])->group(function () {
     Route::get('/resource/articles', [WebsiteController::class, 'articles']);
     Route::get('/resource/articles/search', [WebsiteController::class, 'searchArticles'])->name('articles.search');
     Route::get('/resource/whitepapers', [WebsiteController::class, 'whitepapers']);
-});
+}); // Ini adalah route yang ingin di hitung pada dashboard CMS
 
 Auth::routes();
-Route::get('/cms/dashboard', [WebsiteController::class, 'dashboard'])->name('dashboard')->middleware('auth');
+Route::get('/cms/dashboard', [WebsiteController::class, 'dashboard'])->name('dashboard')->middleware('auth'); //middleware auth berfungsi agar halaman hanya bisa di akses saat sudah login
 Route::get('/cms/Partner', [PartnerController::class, 'index'])->name('Partner.index')->middleware('auth');
 Route::get('/cms/Partner/del/{id}', [PartnerController::class, 'drop'])->middleware('auth');
+//route::resource tidak memerlukan route manual untuk CRUD
 Route::resource('/cms/posts', PostController::class)->middleware('auth');
 
 Route::resource('/cms/staffs', StaffController::class)->middleware('auth');

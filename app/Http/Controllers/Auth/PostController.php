@@ -50,7 +50,6 @@ class PostController extends Controller
                 'description' => $request->description,
                 'content' => $request->content,
                 'edited' => Auth::user()->name,
-                // 'gallery_id' => $gallery->id
             ]);
 
             DB::commit();

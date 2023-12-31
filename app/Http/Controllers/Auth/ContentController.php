@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\content;
 use App\Models\gallery;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 use function PHPUnit\Framework\fileExists;
@@ -19,7 +18,7 @@ class ContentController extends Controller
     public function index()
     {
         $contents = content::all();
-        return view('auth.Contents.index', ['contents' => $contents]);
+        return view('auth.Contents.index', ['contents' => $contents]); //Mengambil list data konten logo perusahaan
     }
 
     /**
@@ -56,7 +55,7 @@ class ContentController extends Controller
                 $gallery = Gallery::create([
                     'image' => $fileName
                 ]);
-            }
+            } //Membuat filename untuk gambar yang namanya akan di simpan pada database dan file nya akan di simpan pada folder public assets
 
             content::create([
                 'title' => $request->title,
@@ -64,7 +63,7 @@ class ContentController extends Controller
                 'type' => $request->type,
                 'description' => $request->description,
                 'link' => $request->link,
-            ]);
+            ]); //Mengirim semua untuk menjadi modal
 
             DB::commit();
         } catch (\Exception $ex) {
@@ -107,7 +106,7 @@ class ContentController extends Controller
                 unlink(public_path('Assets\Website\media\Dashboard\partners') . '/' . $images);
             } else {
                 dd('File Not Found');
-            }
+            } //Menghapus gambar sesuai dengan direktori aset nya dan tipe konten nya
         }
 
         try {
@@ -123,7 +122,7 @@ class ContentController extends Controller
                 $fileName = time() . $file->getClientOriginalName();
                 $imagePath = public_path('Assets\Website\media\Dashboard\partners');
                 $file->move($imagePath, $fileName);
-            }
+            } //Membuat filename untuk gambar yang namanya akan di simpan pada database dan file nya akan di simpan pada folder public assets
 
             $content->update([
                 'title' => $request->title,
@@ -160,7 +159,7 @@ class ContentController extends Controller
             $images = $content->gallery->image;
             unlink(public_path('Assets\Website\media\Dashboard\partners') . '/' . $images);
             $content->gallery->delete();
-        }
+        } //Menghapus gambar aset pada folder public
         $content->delete();
         $request->session()->flash('alert-success', 'Post Removed Successfully');
         return to_route('partners.index');

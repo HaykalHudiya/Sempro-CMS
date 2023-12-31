@@ -36,7 +36,7 @@ class StaffController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
-        $user->password = Hash::make($request->password);
+        $user->password = Hash::make($request->password); //Membuat text yang di input pada text area menjadi encrypt
 
         $user->save();
         $request->session()->flash('alert-success', 'Staff Created');
@@ -99,11 +99,11 @@ class StaffController extends Controller
     public function destroy(Request $request, $id)
     {
         $user = user::find($id);
-        if ($user->seed == 1) {
+        if ($user->seed == 1) { //Untuk mencegah akun yang di buat dengan seeder di hapus maka menggunakan validasi
             $request->session()->flash('alert-danger', 'Staff can not remove');
             return to_route('staffs.index');
         } else {
-            $user->delete();
+            $user->delete(); //Akan menghapus jika pada tabel user, seed = 0
             $request->session()->flash('alert-success', 'Staff Removed');
             return to_route('staffs.index');
         }

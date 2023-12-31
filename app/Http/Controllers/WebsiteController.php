@@ -15,7 +15,7 @@ class WebsiteController extends Controller
         $contents = Content::all();
         $visitors = visitor::all();
 
-        return view('auth.Posts.dashboard', compact('posts', 'contents', 'visitors'));
+        return view('auth.Posts.dashboard', compact('posts', 'contents', 'visitors')); //Untuk menampilkan 3 data pada dashboard lalu menghitungnya
     }
 
     public function Index()
@@ -40,7 +40,7 @@ class WebsiteController extends Controller
         return view('Websites.Resource');
     }
 
-    // -- Documents --
+    // -- Documents -- //Berfungsi untuk menampilkan artikel lalu menampilkan secara satu-persatu
 
     public function show(Post $post)
     {
@@ -49,7 +49,7 @@ class WebsiteController extends Controller
 
     public function articles()
     {
-        $posts = Post::where('is_publish', Post::Published)
+        $posts = Post::where('is_publish', Post::Published) // Akan menampilkan artikel yang pada publish = 1 dan jika draft maka tidak akan di tampilkan
             ->where('tipe_id', 1)
             ->paginate(2);
         // ->get();
@@ -65,7 +65,7 @@ class WebsiteController extends Controller
 
     // -- End of Documents --
 
-    public function searchArticles(Request $request)
+    public function searchArticles(Request $request) //Untuk mencari artikel yang mirip dengan input an pada search bar
     {
         $searchQuery = $request->input('searchQuery');
 
