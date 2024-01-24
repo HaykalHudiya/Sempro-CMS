@@ -164,6 +164,10 @@ return [
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
+        Coderflex\Laravisit\LaravisitServiceProvider::class,
+        Davmixcool\MetaManager\MetaServiceProvider::class,
+        // Mpociot\BotMan\BotManServiceProvider::class,
+        App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,

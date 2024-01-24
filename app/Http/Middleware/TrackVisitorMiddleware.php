@@ -33,7 +33,7 @@ class TrackVisitorMiddleware
 
         // return $next($request);
         $ip = $request->ip();
-        visitor::updateOrcreate(['ip_address' => $ip]);
+        visitor::updateOrcreate(['ip_address' => $ip]); //Berfungsi untuk mentracking visitor yang mengunjungi website dan route di kelompokkan.
 
         return $next($request);
     }

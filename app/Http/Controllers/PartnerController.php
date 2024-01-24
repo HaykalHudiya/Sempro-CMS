@@ -7,12 +7,14 @@ use Illuminate\Http\Request;
 
 class PartnerController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         $partners = partner::all();
         return view('CMS.index', ['partners' => $partners]);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    { //Ini data yang di input pada halaman website
         Partner::create([
             'name' => $request->name,
             'lastname' => $request->lastname,

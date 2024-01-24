@@ -2,20 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\category;
 use App\Models\content;
+use App\Models\laravisit;
 use App\Models\post;
-use App\Models\visitor;
+use App\Models\visitor_month;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+// use Coderflex\Laravisit\Laravisit;
 
 class WebsiteController extends Controller
 {
     public function dashboard()
     {
         $posts = Post::all();
+        $post = Post::find(1);
+        $viewsData = $this->getViewsData(1);
+        $articles = Post::where('tipe_id', 1)->get();
         $contents = Content::all();
-        $visitors = visitor::all();
+        $datas = laravisit::select(DB::raw('MONTH(created_at) as month'), DB::raw('COUNT(*) as count'))
+            ->groupBy('month')
+            ->whereYear('created_at', '=', 2023)
+            ->get();
+        // $visitors = visitor::all();
+        $visitors = Post::withTotalVisitCount()->first()->visit_count_total;
+        $top = Post::select('title')->popularAllTime()->take(4)->pluck('title');
+        // $top = laravisit::where('visitable_id', $visitors)->get();
+        $categories = category::all();
+        // Siapkan data untuk Chart.js
+        $labels = [];
+        $data = [];
+        foreach ($datas as $item) {
+            $labels[] = $item->month;
+            $data[] = $item->count;
+        }
 
-        return view('auth.Posts.dashboard', compact('posts', 'contents', 'visitors')); //Untuk menampilkan 3 data pada dashboard lalu menghitungnya
+        return view('auth.Posts.dashboard', compact('posts', 'post', 'contents', 'visitors', 'categories', 'articles', 'viewsData', 'datas', 'labels', 'data', 'top')); //Untuk menampilkan 3 data pada dashboard lalu menghitungnya
+    }
+
+    private function getViewsData()
+    {
+        $visitorMonths = visitor_month::where('post_id', 1)
+            ->selectRaw('YEAR(date) as year, MONTH(date) as month, COUNT(*) as total_views')
+            ->groupBy('year', 'month')
+            ->get();
+
+        $viewsData = [];
+        foreach ($visitorMonths as $visitorMonth) {
+            $viewsData[$visitorMonth->year . '-' . $visitorMonth->month] = $visitorMonth->total_views;
+        }
+
+        return $viewsData;
     }
 
     public function Index()
@@ -44,6 +82,20 @@ class WebsiteController extends Controller
 
     public function show(Post $post)
     {
+        if ($post) {
+            $categoryId = $post->category_id;
+
+            $category = Category::find($categoryId);
+
+            if ($category) {
+                $categoryName = $category->name;
+            } else {
+                // Handle ketika Category tidak ditemukan
+            }
+        } else {
+            // Handle ketika Post tidak ditemukan
+        }
+        $post->visit()->hourlyIntervals()->withIP()->withData(['category' => $categoryName]);
         return view('auth.Posts.single', ['post' => $post]);
     }
 
