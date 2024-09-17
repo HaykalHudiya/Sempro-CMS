@@ -75,7 +75,13 @@ class WebsiteController extends Controller
 
     public function RE()
     {
-        return view('Websites.Resource');
+        $posts = Post::where('is_publish', Post::Published) // Akan menampilkan artikel yang pada publish = 1 dan jika draft maka tidak akan di tampilkan
+            ->where('tipe_id', 1)
+            ->paginate(3);
+        $whiteps = Post::where('is_publish', Post::Published)
+            ->where('tipe_id', 2)
+            ->paginate(3);
+        return view('Websites.Resource', compact('posts', 'whiteps'));
     }
 
     // -- Documents -- //Berfungsi untuk menampilkan artikel lalu menampilkan secara satu-persatu
@@ -111,7 +117,7 @@ class WebsiteController extends Controller
     {
         $posts = Post::where('is_publish', Post::Published)
             ->where('tipe_id', 2)
-            ->get();
+            ->paginate(2);
         return view('Websites.Whitepapers.index', ['posts' => $posts]);
     }
 
@@ -131,5 +137,21 @@ class WebsiteController extends Controller
         $posts->appends(request()->except('page')); // Ubah jumlah item per halaman sesuai kebutuhan
 
         return view('Websites.Articles.index', compact('posts'));
+    }
+
+    public function searchWhitepapers(Request $request) //Untuk mencari artikel yang mirip dengan input an pada search bar
+    {
+        $searchQuery = $request->input('searchQuery');
+
+        $posts = Post::where('is_publish', Post::Published)
+            ->where('tipe_id', 2)
+            ->where(function ($query) use ($searchQuery) {
+                $query->where('title', 'LIKE', "%$searchQuery%")
+                    ->orWhere('description', 'LIKE', "%$searchQuery%");
+            })
+            ->paginate(2);
+        $posts->appends(request()->except('page')); // Ubah jumlah item per halaman sesuai kebutuhan
+
+        return view('Websites.Whitepapers.index', compact('posts'));
     }
 }

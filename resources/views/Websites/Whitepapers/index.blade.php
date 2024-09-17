@@ -32,20 +32,12 @@
                                     </div>
                                 @endforeach
                             </div>
-                            <div class="paginations d-flex">
-                                <li class="page-item previous-page disable"><a class="page-link">Prev</a></li>
-                                <li class="page-item current-page active"><a class="page-link">1</a></li>
-                                <li class="page-item dots"><a class="page-link">...</a></li>
-                                <li class="page-item current-page"><a class="page-link">5</a></li>
-                                <li class="page-item current-page"><a class="page-link">6</a></li>
-                                <li class="page-item dots"><a class="page-link">...</a></li>
-                                <li class="page-item current-page"><a class="page-link">10</a></li>
-                                <li class="page-item next-page"><a class="page-link">Next</a></li>
-                            </div>
+                            {{ $posts->appends(request()->except('page'))->links('vendor.pagination.bootstrap-5') }}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 </x-layout1>

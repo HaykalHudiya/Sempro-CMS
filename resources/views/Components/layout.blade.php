@@ -25,11 +25,11 @@
     <link href="{{ asset('Assets/Website/aos/aos.css') }}" rel="stylesheet">
     <!-- Swiper CDN -->
     <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-    @include('meta::manager', [
+    {{-- @include('meta::manager', [
         'title' => $post ? $post->title : 'Document',
         'description' => 'This is my example description',
         'keywords' => [$post->category->name],
-    ])
+    ]) --}}
 </head>
 
 <body>
@@ -191,7 +191,7 @@
         document.querySelector('form').addEventListener('submit', function(event) {
             event.preventDefault();
             const userCaptcha = document.getElementById('captcha')
-            .value; // Ambil teks captcha yang dimasukkan oleh pengguna
+                .value; // Ambil teks captcha yang dimasukkan oleh pengguna
 
             // Bandingkan teks captcha pengguna dengan teks captcha yang dihasilkan
             if (userCaptcha === generatedCaptcha) {
